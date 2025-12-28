@@ -1,7 +1,7 @@
 import os
 import chromadb
 from pathlib import Path
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 from dotenv import load_dotenv
 
@@ -33,7 +33,8 @@ def add_documents_to_chroma(user_id: int, chunks: list):
     )
     
     vectorstore.add_documents(chunks)
-    vectorstore.persist()
+    vectorstore.add_documents(chunks)
+    # vectorstore.persist() # Deprecated in langchain-chroma (auto-persists)
     # print(f"Added {len(chunks)} chunks to ChromaDB for user {user_id} at {persist_directory}")
 
 def get_vectorstore(user_id: int):

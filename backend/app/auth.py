@@ -71,6 +71,7 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
         # print(f"Failed to create user directory: {e}")
         # Proceeding for now as directory creation failure shouldn't crash the response if DB is committed, 
         # but logically it's an error state. 
+        pass 
 
     return new_user
 

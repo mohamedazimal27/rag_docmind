@@ -15,7 +15,10 @@ from . import vector_store
 LLM = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 STRICT_SYSTEM_PROMPT = """You are DocuMind Pro, a helpful assistant.
-Answer the user's question based ONLY on the provided context.
+Answer the user's question using the provided context.
+
+Question:
+{question}
 
 Context:
 {context}
@@ -25,7 +28,8 @@ STRICT FORMATTING RULES:
 2. Sources:
    - File: <filename> | Page/Row: <reference>
 
-If the answer is not in the context, explicitly refuse. Do not make up information.
+If the answer is not entirely in the context, summarize what IS in the context related to the question.
+If the context is completely irrelevant, then explicitly refuse.
 """
 
 def format_docs(docs):
@@ -49,25 +53,23 @@ def format_docs(docs):
         formatted_chunks.append(formatted_chunk)
         
     return "\n\n".join(formatted_chunks)
-
+        
 def get_answer(user_id: int, question: str) -> str:
     """
     Retrieves documents and generates an answer using RAG.
     """
-    # 1. Retrieval (Section 9: k=4, user isolation)
-    # Note: We get the vectorstore interface, but need to instantiate a retriever
-    # The vector_store module returns a Chroma object
-    
     vectorstore = vector_store.get_vectorstore(user_id)
+    # Reverting to simple retrieval significantly robust
+    # We kept k=10 from optimization
     retriever = vectorstore.as_retriever(
         search_type="similarity",
         search_kwargs={
-            "k": 4, 
-            "filter": {"user_id": user_id} # CRITICAL: User Isolation
+            "k": 10, 
+            "filter": {"user_id": user_id} 
         }
     )
     
-    # 2. RAG Chain
+    # Standard RAG Chain
     prompt = ChatPromptTemplate.from_template(STRICT_SYSTEM_PROMPT)
     
     rag_chain = (
