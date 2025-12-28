@@ -1,3 +1,20 @@
-venv/\n__pycache__/\n.env\nnode_modules/\ndist/\n.DS_Store
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Environment
+.env
+
+# Node
+node_modules/
+
+# Build output
+dist/
+
+# OS files
+.DS_Store
+
+# Data
 data/
 *.db
