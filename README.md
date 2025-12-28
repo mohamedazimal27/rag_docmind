@@ -1,81 +1,96 @@
-# DocuMind Pro
+# DocuMind Pro 🧠
 
-DocuMind Pro is a RAG-based (Retrieval Augmented Generation) Document Q&A application. It allows users to upload documents (PDF, TXT, CSV) and ask questions about them using an LLM, with strict data isolation per user.
+![DocuMind Pro Interface](assets/demo.png)
 
-## Features
-- **User Authentication**: Secure Signup/Login (JWT-based).
-- **Document Ingestion**: Supports PDF, TXT, and CSV/XLSX.
-- **RAG Pipeline**: 
-  - Chunking & Embedding (OpenAI).
-  - Vector Storage (ChromaDB) with user isolation.
-  - Retrieval (Top-k similarity search).
-- **Chat Interface**: Interactive UI asking questions and viewing sources.
+**DocuMind Pro** is a professional Retrieval-Augmented Generation (RAG) application that allows users to upload documents (PDF, TXT, CSV) and ask questions about them in natural language. Built with a focus on security, scalability, and a premium user experience.
 
-## Prerequisites
-- **Python 3.10+**
-- **Node.js** & **npm**
-- **OpenAI API Key**
+> **Note**: This is a portfolio project demonstrating full-stack engineering, RAG pipeline implementation, and modern security practices.
 
-## Installation
+## 🚀 Key Features
 
-### 1. Backend Setup
-Navigate to the project root:
+*   **📄 Universal Ingestion**: Supports PDF, TXT, and CSV/XLSX file parsing.
+*   **🔍 RAG Pipeline**: Powered by LangChain and OpenAI for accurate, context-aware answers.
+*   **🗄️ Vector Search**: Uses ChromaDB for efficient semantic retrieval.
+*   **🔒 Secure Authentication**: JWT-based auth with `bcrypt` password hashing.
+*   **🎨 Premium UI**: Responsive, dark-themed interface built with React and Vite.
+*   **⚖️ Scalable Architecture**: FastAPI backend with clear separation of concerns.
+
+## 🛠️ Tech Stack
+
+**Backend**
+*   ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi) **FastAPI**: High-performance web framework.
+*   ![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=flat&logo=langchain) **LangChain**: RAG orchestration.
+*   ![ChromaDB](https://img.shields.io/badge/ChromaDB-fc5203?style=flat) **ChromaDB**: Vector store.
+*   **SQLAlchemy**: Database ORM.
+
+**Frontend**
+*   ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB) **React**: UI library.
+*   ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white) **Vite**: Next-generation build tool.
+*   ![Css](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white) **CSS3**: Custom premium dark theme.
+
+## 🏁 Getting Started
+
+Follow these instructions to run the project locally.
+
+### Prerequisites
+*   Python 3.10+
+*   Node.js 16+
+*   OpenAI API Key
+
+### 1. Clone the Repository
 ```bash
-# Create virtual environment
-python3 -m venv venv
-
-# Activate virtual environment
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
+git clone https://github.com/your-username/documind-pro.git
+cd documind-pro
 ```
 
-### 2. Frontend Setup
-Navigate to the frontend directory:
+### 2. Backend Setup
 ```bash
-cd frontend
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r ../requirements.txt
+
+# Create .env file
+cp .env.example .env
+# Open .env and add your OPENAI_API_KEY
+```
+
+### 3. Frontend Setup
+```bash
+cd ../frontend
 npm install
-cd ..
 ```
 
-### 3. Environment Variables
-Create a `.env` file in the **project root** directory (`/home/mohamed-azimal/code/n8n-codes/RAG/portfolio_project/.env`):
+### 4. Run the Application
+You need to run both the backend and frontend terminals.
 
+**Terminal 1 (Backend):**
 ```bash
-OPENAI_API_KEY=sk-...your_key_here...
-SECRET_KEY=your_secure_secret_key
-```
-
-## Running the Application
-
-You need to run the backend and frontend in separate terminals.
-
-### Terminal 1: Backend
-```bash
-# From project root
+cd backend
 source venv/bin/activate
-uvicorn backend.app.main:app --reload --port 8000
+uvicorn app.main:app --reload
 ```
-*The API will be available at http://localhost:8000*
-*Swagger Docs: http://localhost:8000/docs*
 
-### Terminal 2: Frontend
+**Terminal 2 (Frontend):**
 ```bash
-# From project root
 cd frontend
 npm run dev
 ```
-*The App will be running at http://localhost:5173*
 
-## Usage Guide to Test
-1.  **Open App**: Go to [http://localhost:5173](http://localhost:5173).
-2.  **Login**: Use credentials `test@example.com` / `securepassword`.
-    *   *(Note: Registration API exists at `/register` but UI currently only has Login. Use Swagger UI to register new users if needed).*
-3.  **Upload**: Click the "Upload Document" button and select a file.
-4.  **Chat**: Type a question like "Summarize this document" or "What does the file say about X?".
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-## Project Structure
-- `backend/app`: FastAPI application source code.
-- `frontend/src`: React application source code.
-- `data/`: Stores user files and ChromaDB vectors (created automatically).
+## 📚 Architecture
+
+1.  **Upload**: User uploads a file. Backend validates and saves it.
+2.  **Ingestion**: File is parsed (using `pdfplumber` or `pandas`), chunked, and embedded using `OpenAIEmbeddings`.
+3.  **Storage**: Embeddings are stored in a user-specific ChromaDB collection.
+4.  **Retrieval**: When a user asks a question, the system searches ChromaDB for relevant chunks.
+5.  **Generation**: The LLM (GPT-4o-mini) generates an answer using the retrieved context.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+## 📄 License
+
+This project is open-source and available under the [MIT License](LICENSE).
