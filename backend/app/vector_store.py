@@ -34,7 +34,7 @@ def add_documents_to_chroma(user_id: int, chunks: list):
     
     vectorstore.add_documents(chunks)
     vectorstore.persist()
-    print(f"Added {len(chunks)} chunks to ChromaDB for user {user_id} at {persist_directory}")
+    # print(f"Added {len(chunks)} chunks to ChromaDB for user {user_id} at {persist_directory}")
 
 def get_vectorstore(user_id: int):
     """

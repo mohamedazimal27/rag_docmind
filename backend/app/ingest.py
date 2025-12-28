@@ -124,7 +124,7 @@ def process_file(file_path: str, original_filename: str, user_id: int) -> List[D
             raise ValueError(f"Unsupported file type: {ext}")
 
     except Exception as e:
-        print(f"Error processing file {file_path}: {e}")
+        # print(f"Error processing file {file_path}: {e}")
         raise e
 
     return docs

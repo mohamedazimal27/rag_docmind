@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from .database import engine, Base
-from . import auth, models, ingest, vector_store, schemas
+from . import auth, models, ingest, vector_store, schemas, rag
 
 # Create Database Tables
 Base.metadata.create_all(bind=engine)
@@ -84,6 +84,27 @@ async def upload_file(
          # Cleanup on failure
          if os.path.exists(file_path):
             os.remove(file_path)
-         print(f"Ingestion failed: {e}")
+         # print(f"Ingestion failed: {e}")
          raise HTTPException(status_code=500, detail=f"Processing failed: {str(e)}")
 
+@app.get("/files")
+async def list_files(current_user: models.User = Depends(auth.get_current_user)):
+    user_id = current_user.id
+    user_files_dir = DATA_DIR / str(user_id) / "files"
+    
+    if not os.path.exists(user_files_dir):
+        return {"files": []}
+    
+    files = [f for f in os.listdir(user_files_dir) if os.path.isfile(os.path.join(user_files_dir, f))]
+    return {"files": files}
+
+@app.post("/chat")
+async def chat(
+    request: schemas.ChatRequest,
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    try:
+        answer = rag.get_answer(current_user.id, request.question)
+        return {"answer": answer}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")

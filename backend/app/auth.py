@@ -65,10 +65,10 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     user_folder = DATA_DIR / str(new_user.id)
     try:
         os.makedirs(user_folder, exist_ok=True)
-        print(f"Created user directory: {user_folder}")
+        # print(f"Created user directory: {user_folder}")
     except Exception as e:
         # In a real app, might want to rollback DB transaction here
-        print(f"Failed to create user directory: {e}")
+        # print(f"Failed to create user directory: {e}")
         # Proceeding for now as directory creation failure shouldn't crash the response if DB is committed, 
         # but logically it's an error state. 
 
